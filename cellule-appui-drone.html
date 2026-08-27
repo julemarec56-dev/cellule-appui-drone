@@ -26,7 +26,7 @@
   --success:#31E38C; --amber:#FFC24B; --red:#FF3B5C; --orange:#FF8A4C;
 }
 *{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
+html,body{margin:0;padding:0;overflow-x:hidden;}
 body{
   font-family:'Rubik',system-ui,sans-serif;
   background:linear-gradient(180deg,var(--bg-top) 0%,var(--bg-bot) 320px);
@@ -49,8 +49,10 @@ body{
 .page-tab.active{background:var(--navy);border-color:var(--navy);color:#fff;}
 
 /* ---------- astreinte tab (iframe embed, untouched page) ---------- */
-.astreinte-frame-wrap{border-radius:16px;overflow:hidden;box-shadow:0 2px 14px var(--shadow);border:1px solid var(--line);}
-#astreinteFrame{display:block;width:100%;height:calc(100vh - 190px);height:calc(100dvh - 190px);min-height:560px;border:none;}
+/* Plein format d'origine : le wrapper sort du padding de .wrap pour occuper toute
+   la largeur de l'écran, sans cadre ni ombre — exactement comme la page seule. */
+.astreinte-frame-wrap{width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;}
+#astreinteFrame{display:block;width:100%;border:none;}
 
 /* ---------- météo controls ---------- */
 .meteo-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
@@ -92,13 +94,6 @@ body{
 
 /* ---------- grid / cards ---------- */
 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;}
-.meteo-brand{display:flex;align-items:center;gap:8px;margin-left:auto;}
-.meteo-brand img{height:44px;width:auto;display:block;}
-.meteo-brand .meteo-brand-dark{display:none;}
-[data-theme="dark"] .meteo-brand .meteo-brand-light{display:none;}
-[data-theme="dark"] .meteo-brand .meteo-brand-dark{display:block;}
-.meteo-brand span{font-size:18px;font-weight:800;color:var(--navy);letter-spacing:.2px;}
-[data-theme="dark"] .meteo-brand span{color:#fff;}
 .card{
   background:var(--card-bg);border:1px solid var(--line);border-radius:16px;
   padding:16px 18px;box-shadow:0 2px 14px var(--shadow);
@@ -173,7 +168,6 @@ body{
   .wrap{padding:10px 10px 40px;}
   .page-tabs{gap:6px;flex-wrap:wrap;}
   .page-tab{padding:9px 14px;font-size:13px;flex:1 1 auto;justify-content:center;}
-  .meteo-brand{margin-left:0;width:100%;justify-content:flex-end;order:99;margin-top:6px;}
   .meteo-controls{gap:8px;}
   .loc-search{flex:1 1 100%;max-width:none;}
   .card{padding:14px 14px;}
@@ -192,11 +186,6 @@ body{
   <div class="page-tabs">
     <button class="page-tab active" data-page="astreinte" type="button">🛰️ Astreinte Drone</button>
     <button class="page-tab" data-page="meteo" type="button">🌦️ Météo</button>
-    <div class="meteo-brand" id="meteoBrand" style="display:none;">
-      <img class="meteo-brand-light" src="assets/oplife-lockup-color.png" alt="OPlife">
-      <img class="meteo-brand-dark" src="assets/oplife-lockup-white.png" alt="OPlife">
-      <span>MÉTÉO</span>
-    </div>
   </div>
 
   <div class="page-view" id="pageAstreinte">
@@ -226,22 +215,6 @@ body{
     </div>
 
     <div class="grid">
-      <!-- Météogramme -->
-      <div class="card col-9">
-        <h2><span class="dot live"></span>Météogramme détaillé <span class="card-loc-badge" id="meteogramLocBadge">—</span> <span class="src">Open-Meteo — glisser pour voir les jours suivants</span></h2>
-        <div class="meteogram-scroll"><div id="meteogramWrap"><div class="loading-txt">Chargement…</div></div></div>
-      </div>
-
-      <!-- Boussole -->
-      <div class="card col-3">
-        <h2><span class="dot live"></span>Vent — direction &amp; force</h2>
-        <div class="compass-wrap">
-          <svg id="compassSvg" width="230" height="230" viewBox="0 0 230 230"></svg>
-          <div class="compass-current" id="compassCurrent">-- km/h<small id="compassLabel">chargement…</small></div>
-          <div class="gust-tag" id="gustTag">rafales -- km/h</div>
-        </div>
-      </div>
-
       <!-- Conditions de vol drone -->
       <div class="card col-12">
         <h2><span class="dot live"></span>Conditions de vol drone <span class="src">Open-Meteo + NOAA SWPC (indice Kp)</span></h2>
@@ -261,6 +234,22 @@ body{
           </div>
         </div>
         <div class="drone-kpi-grid" id="droneKpiGrid"><div class="loading-txt"></div></div>
+      </div>
+
+      <!-- Météogramme -->
+      <div class="card col-9">
+        <h2><span class="dot live"></span>Météogramme détaillé <span class="card-loc-badge" id="meteogramLocBadge">—</span> <span class="src">Open-Meteo — glisser pour voir les jours suivants</span></h2>
+        <div class="meteogram-scroll"><div id="meteogramWrap"><div class="loading-txt">Chargement…</div></div></div>
+      </div>
+
+      <!-- Boussole -->
+      <div class="card col-3">
+        <h2><span class="dot live"></span>Vent — direction &amp; force</h2>
+        <div class="compass-wrap">
+          <svg id="compassSvg" width="230" height="230" viewBox="0 0 230 230"></svg>
+          <div class="compass-current" id="compassCurrent">-- km/h<small id="compassLabel">chargement…</small></div>
+          <div class="gust-tag" id="gustTag">rafales -- km/h</div>
+        </div>
       </div>
 
       <!-- Prévision précipitations -->
@@ -716,9 +705,20 @@ document.querySelectorAll('.page-tab').forEach(tab=>{
     tab.classList.add('active');
     document.querySelectorAll('.page-view').forEach(p=>p.style.display='none');
     $(PAGE_VIEW_ID[tab.dataset.page]).style.display='';
-    $('meteoBrand').style.display = tab.dataset.page==='meteo' ? '' : 'none';
+    if(tab.dataset.page==='astreinte') sizeAstreinteFrame();
   });
 });
+
+/* Le cadre Astreinte doit remplir tout l'écran restant sous la barre d'onglets,
+   exactement comme la page seule (pas de bande morte en bas, pas de hauteur figée
+   qui casse le centrage vertical du planning). Recalculé à l'ouverture et au resize. */
+function sizeAstreinteFrame(){
+  const frame = $('astreinteFrame');
+  const top = frame.getBoundingClientRect().top;
+  frame.style.height = Math.max(560, window.innerHeight - top) + 'px';
+}
+sizeAstreinteFrame();
+window.addEventListener('resize', sizeAstreinteFrame);
 
 /* ===================== INIT ===================== */
 updateWindyFrame();
