@@ -131,11 +131,11 @@ body{
 .gust-tag{display:inline-block;margin-top:6px;background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:4px 11px;border-radius:20px;}
 
 /* ---------- conditions de vol drone ---------- */
-.drone-controls{display:flex;justify-content:flex-end;gap:10px;margin-bottom:10px;}
 .layer-btn{
   font-family:inherit;font-size:12px;font-weight:700;padding:8px 14px;cursor:pointer;
   background:var(--card-bg);color:var(--navy-soft);border:1.5px solid var(--line);border-radius:9px;
 }
+.layer-btn-sm{font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:7px;text-transform:none;letter-spacing:0;flex-shrink:0;}
 .layer-btn:hover{border-color:var(--orange);color:var(--orange-ink);}
 .layer-btn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
 .drone-config-panel{
@@ -164,7 +164,7 @@ body{
 .drone-status .r{font-size:12.5px;opacity:.92;margin-top:4px;line-height:1.4;}
 
 .footer-note{margin-top:22px;font-size:11px;color:#9099b8;line-height:1.6;border-top:1px solid var(--line);padding-top:14px;}
-.app-credit{margin-top:22px;text-align:center;font-size:11.5px;color:var(--navy-soft);font-weight:600;}
+.app-credit{margin-top:22px;text-align:center;font-size:10px;text-transform:none;font-weight:500;color:#9099b8;}
 
 /* ---------- mobile (une seule passe, consolidée) ---------- */
 @media(max-width:640px){
@@ -226,10 +226,7 @@ body{
     <div class="grid">
       <!-- Conditions de vol drone -->
       <div class="card col-12">
-        <h2><span class="dot live"></span>Conditions de vol drone <span class="src">Open-Meteo + NOAA SWPC (indice Kp)</span></h2>
-        <div class="drone-controls">
-          <button class="layer-btn" id="droneConfigBtn" type="button">⚙ Configuration des critères</button>
-        </div>
+        <h2><span class="dot live"></span>Conditions de vol drone <button class="layer-btn layer-btn-sm" id="droneConfigBtn" type="button">⚙ Critères</button> <span class="src">Open-Meteo + NOAA SWPC (indice Kp)</span></h2>
         <div class="drone-config-panel" id="droneConfigPanel" style="display:none;">
           <div class="drone-config-row"><label>Rafales — seuil vigilance (km/h)</label><input type="number" id="cfgGustVigilance" min="0" max="150" step="1"></div>
           <div class="drone-config-row"><label>Rafales — seuil défavorable (km/h)</label><input type="number" id="cfgGustDefavorable" min="0" max="150" step="1"></div>
@@ -275,7 +272,7 @@ body{
 
   </div>
 
-  <div class="app-credit">Créé par Julien Le Marec — OPlife</div>
+  <div class="app-credit">Julien Le Marec</div>
 
 </div>
 
