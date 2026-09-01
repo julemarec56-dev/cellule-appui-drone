@@ -1,12 +1,20 @@
 {
-  "date": "2026-09-01",
-  "extracted_at": "2026-08-31T06:02:05.198629",
-  "TPJ": 0,
-  "TPJ_noms": [],
-  "TPN": 0,
-  "TPN_noms": [],
-  "OLJ": 0,
-  "OLJ_noms": [],
-  "OLN": 0,
-  "OLN_noms": []
+  "date": "2026-09-02",
+  "extracted_at": "2026-09-01T06:01:10.191409",
+  "TPJ": 1,
+  "TPJ_noms": [
+    "DARCEL Séb"
+  ],
+  "TPN": 1,
+  "TPN_noms": [
+    "DARCEL Séb"
+  ],
+  "OLJ": 1,
+  "OLJ_noms": [
+    "DAGUENET Jul"
+  ],
+  "OLN": 1,
+  "OLN_noms": [
+    "DAGUENET Jul"
+  ]
 }
